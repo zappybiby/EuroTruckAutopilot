@@ -6,15 +6,11 @@ endy = 1000
 
 
 def hough_lines(warped, original):
-    linesP = cv2.HoughLinesP(warped, 1, np.pi / 180, 50, None, 75, 100)
-    # start_left_lane = []
-    # end_left_lane = []
-    # start_right_lane = []
-    # end_right_lane = []
+    linesP = cv2.HoughLinesP(warped, 1, np.pi / 180, 50, None, 25, 150)
 
     if linesP is not None:
         for i in range(0, len(linesP)):
-            print("# of lines:", len(linesP))
+            #print("# of lines:", len(linesP))
 
             l = linesP[i][0]
             x1 = l[0]
@@ -25,7 +21,7 @@ def hough_lines(warped, original):
             slope = (y2 - y1) / (x2 - x1)
 
             if slope < 0:
-                for x1, y1, x2, y2 in linesP[0]:
+                for x1, y1, x2, y2 in linesP[i]:
                     if (np.isnan(x1) == False) and (np.isnan(y1) == False) and (np.isnan(x2) == False) and (
                             np.isnan(y2) == False):
                         if ((x2 - x1) != 0) and ((y2 - y1) != 0):
@@ -48,6 +44,6 @@ def hough_lines(warped, original):
 
             cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
             cv2.resizeWindow("Test2", 500, 500)
-            cv2.moveWindow("Test2", -1920, 0)
+            cv2.moveWindow("Test2", -940, 0)
             cv2.imshow("Test2", original)
             cv2.waitKey(1)
