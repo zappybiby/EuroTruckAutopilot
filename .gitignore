@@ -56,3 +56,13 @@ docs/_build/
 
 # PyBuilder
 target/
+
+\.idea/
+
+venv/Scripts/
+
+venv/
+
+lane\.jpg
+
+resized\.jpg
