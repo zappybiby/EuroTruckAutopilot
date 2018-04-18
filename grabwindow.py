@@ -11,11 +11,8 @@ import perspective_transform
 # Make program aware of DPI scaling
 windll.user32.SetProcessDPIAware()
 
-isRunning = False
-
 
 def grab_window():
-    global isRunning
     while True:
         try:
             hwnd = win32gui.FindWindow("prism3d", None)
@@ -29,6 +26,5 @@ def grab_window():
             game_window = {'top': top, 'left': left, 'width': width, 'height': height}
             foreground_window_name = win32gui.GetWindowText(win32gui.GetForegroundWindow())
             if foreground_window_name == "Euro Truck Simulator 2":
-                isRunning = True
                 game_capture = numpy.array(mss().grab(game_window))
                 perspective_transform.perspective_transform(game_capture)
