@@ -1,4 +1,4 @@
-import grabwindow
+import grab_window
 
 if __name__ == '__main__':
-    grabwindow.grab_window()
+    grab_window.grab_window()
