@@ -1,11 +1,12 @@
 import cv2
-import numpy as np
 import keyboard
+import numpy as np
+
 import image_process
 
-a = 920
-b = -160
-c = 70
+a = 20
+b = 40
+c = 60
 d = -70
 
 
@@ -52,7 +53,6 @@ def perspective_transform(window):
     if keyboard.is_pressed('k'):
         d -= 10
         print("d:", d)
-
 
     src = np.float32(
         [[(-a), height - b],

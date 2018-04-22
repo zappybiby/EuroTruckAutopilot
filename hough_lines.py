@@ -1,3 +1,5 @@
+import datetime
+
 import cv2
 import numpy as np
 
@@ -6,44 +8,55 @@ endy = 1000
 
 
 def hough_lines(warped, original):
-    linesP = cv2.HoughLinesP(warped, 1, np.pi / 180, 50, None, 25, 150)
+    lines_p = cv2.HoughLinesP(warped, 1, np.pi / 180, 50, None, 50, 300)
+    if lines_p is not None:
+        length = len(lines_p)
+        extrapolated_lines = []
+        start_time = datetime.datetime.now().time().microsecond
+        for i in range(0, length):
+            for j in range(0, length):
+                if i != j:
+                    line_1 = lines_p[i][0]
+                    line_2 = lines_p[j][0]
 
-    if linesP is not None:
-        for i in range(0, len(linesP)):
-            #print("# of lines:", len(linesP))
+                    if False not in (line_1.all(), line_2.all()):
+                        line_1_x1 = line_1[0]
+                        line_1_y1 = line_1[1]
+                        line_1_x2 = line_1[2]
+                        line_1_y2 = line_1[3]
 
-            l = linesP[i][0]
-            x1 = l[0]
-            y1 = l[1]
-            x2 = l[2]
-            y2 = l[3]
+                        line_2_x1 = line_2[0]
+                        line_2_y1 = line_2[1]
+                        line_2_x2 = line_2[2]
+                        line_2_y2 = line_2[3]
 
-            slope = (y2 - y1) / (x2 - x1)
+                        line_x_distance = np.sqrt(np.square(line_2_x1 - line_1_x1) + np.square(line_2_x2 - line_1_x2))
+                        line_y_length = np.abs((line_2_y1 + line_1_y1) / 2 - (line_2_y2 + line_1_y2) / 2)
+                        distance = (np.sqrt(np.square(line_2_x1 - line_1_x1) + np.square(line_2_y1 - line_1_y1)) +
+                                    np.sqrt(np.square(line_2_x2 - line_1_x2) + np.square(line_2_y2 - line_1_y2))) / 2
 
-            if slope < 0:
-                for x1, y1, x2, y2 in linesP[i]:
-                    if (np.isnan(x1) == False) and (np.isnan(y1) == False) and (np.isnan(x2) == False) and (
-                            np.isnan(y2) == False):
-                        if ((x2 - x1) != 0) and ((y2 - y1) != 0):
-                            left_avg_slope = (y2 - y1) / (x2 - x1)
-                            left_avg_intercept = y1 - left_avg_slope * x1
-                            left_startx = int((starty - left_avg_intercept) / left_avg_slope)
-                            left_endx = int((endy - left_avg_intercept) / left_avg_slope)
-                            cv2.line(original, (left_startx, starty), (left_endx, endy), (0, 0, 255), 3)
+                        if line_x_distance < 20 and line_y_length > 40 and 10 < distance <= 100:
+                            line_3_x1 = (line_2_x1 + line_1_x1) / 2
+                            if line_3_x1 not in extrapolated_lines:
+                                line_3_y1 = (line_2_y1 + line_1_y1) / 2
+                                line_3_x2 = (line_2_x2 + line_1_x2) / 2
+                                line_3_y2 = (line_2_y2 + line_1_y2) / 2
 
-            if slope > 0:
-                for x1, y1, x2, y2 in linesP[i]:
-                    if (np.isnan(x1) == False) and (np.isnan(y1) == False) and (np.isnan(x2) == False) and (
-                            np.isnan(y2) == False):
-                        if ((x2 - x1) != 0) and ((y2 - y1) != 0):
-                            right_avg_slope = (y2 - y1) / (x2 - x1)
-                            right_avg_intercept = y1 - right_avg_slope * x1
-                            right_startx = int((starty - right_avg_intercept) / right_avg_slope)
-                            right_endx = int((endy - right_avg_intercept) / right_avg_slope)
-                            cv2.line(original, (right_startx, starty), (right_endx, endy), (255, 0, 0), 3)
+                                if 0 not in (
+                                        line_3_x1, line_3_x2, line_3_y1, line_3_y2,
+                                        np.abs(line_3_x1) - np.abs(line_3_x2),
+                                        np.abs(line_3_y1) - np.abs(line_3_y2)):
+                                    line_3_avg_slope = (line_3_y2 - line_3_y1) / (line_3_x2 - line_3_x1)
+                                    line_3_avg_intercept = line_3_y1 - line_3_avg_slope * line_3_x1
+                                    line_3_startx = int((starty - line_3_avg_intercept) / line_3_avg_slope)
+                                    right_endx = int((endy - line_3_avg_intercept) / line_3_avg_slope)
+                                    extrapolated_lines.append(line_3_x1)
+                                    cv2.line(original, (line_3_startx, starty), (right_endx, endy), (0, 0, 255), 3)
 
-            cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
-            cv2.resizeWindow("Test2", 500, 500)
-            cv2.moveWindow("Test2", -940, 0)
-            cv2.imshow("Test2", original)
-            cv2.waitKey(1)
+        print("# of lines:", length, "found:", len(extrapolated_lines),
+              datetime.datetime.now().time().microsecond - start_time)
+        cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("Test2", 450, 500)
+        cv2.moveWindow("Test2", -500, 300)
+        cv2.imshow("Test2", original)
+        cv2.waitKey(1)
