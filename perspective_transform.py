@@ -4,24 +4,24 @@ import numpy as np
 
 import image_process
 
-a = 20
+a = 220
 b = 40
-c = 60
+c = 70
 d = -70
 
 
-def perspective_transform(window):
+def perspective_transform(capture):
     global a, b, c, d
 
-    window_resized = cv2.resize(window, (640, 360))
+    window_resized = cv2.resize(capture, (640, 360))
     original_resized = window_resized.copy()
 
     # Remove upper half of image
-    cropped_window = window_resized[int(window_resized.shape[0] / 2):int(window_resized.shape[0])]
+    processed_cropped = window_resized[int(window_resized.shape[0] / 2):int(window_resized.shape[0])]
     cropped_original = original_resized[int(original_resized.shape[0] / 2):int(original_resized.shape[0])]
 
-    width = cropped_window.shape[1]
-    height = cropped_window.shape[0]
+    width = processed_cropped.shape[1]
+    height = processed_cropped.shape[0]
     window_size = (width, height)
 
     width_original = cropped_original.shape[1]
@@ -68,7 +68,7 @@ def perspective_transform(window):
 
     m = cv2.getPerspectiveTransform(src, dst)
 
-    warped = cv2.warpPerspective(cropped_window, m, window_size, flags=cv2.INTER_LINEAR)
+    warped = cv2.warpPerspective(processed_cropped, m, window_size, flags=cv2.INTER_LINEAR)
     original_warped = cv2.warpPerspective(cropped_original, m, original_size, flags=cv2.INTER_LINEAR)
 
     cv2.namedWindow("original_warped", cv2.WINDOW_NORMAL)
