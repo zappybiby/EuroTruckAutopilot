@@ -8,7 +8,7 @@ def pre_process(warped, original):
     blur = cv2.GaussianBlur(warped, (15, 15), 0)
     gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
     adaptive_thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 21, -3)
-    merge = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+    merge = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
 
     # median = np.median(merge)
     # lower = int(max(0, (1.0 - 0.33) * median))
