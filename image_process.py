@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import matplotlib.pyplot as plt
 import hough_lines
 
 
@@ -9,6 +9,11 @@ def pre_process(warped, original):
     gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
     adaptive_thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 21, -3)
     merge = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+
+    # TODO: USE THIS COOL HISTOGRAM THING FOR STYLE POINTS?
+    # histogram = np.sum(merge[merge.shape[0]//2:,:], axis=0)
+    # plt.plot(histogram)
+    # plt.show()
 
     # median = np.median(merge)
     # lower = int(max(0, (1.0 - 0.33) * median))
