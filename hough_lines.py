@@ -13,8 +13,9 @@ def hough_lines(warped, original):
              (255, 0, 0), 5)
     cv2.line(original, (previous_lines[1][0], previous_lines[1][1]), (previous_lines[1][2], previous_lines[1][3]),
              (0, 0, 255), 5)
-    # cv2.line(original, (int((previous_lines[0][0] + previous_lines[0][2]) / 2), 90),
-    #          (int((previous_lines[1][0] + previous_lines[1][2]) / 2), 90), (0, 255, 255), 3)
+    cv2.line(original, (int((previous_lines[0][0] + previous_lines[0][2]) / 2), 90),
+             (int((previous_lines[1][0] + previous_lines[1][2]) / 2), 90), (0, 255, 255), 1)
+
     if lines_p is not None:
         length = len(lines_p)
         extrapolated_lines = []
@@ -36,21 +37,19 @@ def hough_lines(warped, original):
 
                         line_x_distance = np.sqrt(np.square(line_2_x1 - line_1_x1) + np.square(line_2_x2 - line_1_x2))
                         line_y_length = np.abs((line_2_y1 + line_1_y1) / 2 - (line_2_y2 + line_1_y2) / 2)
-                        distance = (np.sqrt(np.square(line_2_x1 - line_1_x1) + np.square(line_2_y1 - line_1_y1)) +
-                                    np.sqrt(np.square(line_2_x2 - line_1_x2) + np.square(line_2_y2 - line_1_y2))) / 2
 
                         line_1_slope = (line_1_y2 - line_1_y1) / (
                                 line_1_x2 - line_1_x1) if line_1_x2 - line_1_x1 != 0 else 0
                         line_2_slope = (line_2_y2 - line_2_y1) / (
                                 line_2_x2 - line_2_x1) if line_2_x2 - line_2_x1 != 0 else 0
 
-                        if line_x_distance < 20 and line_y_length > 75 and 5 < distance <= 200:
+                        if line_x_distance < 20 and line_y_length > 75:
                             if line_1_x1 not in extrapolated_lines and line_2_x1 not in extrapolated_lines:
                                 if 0 not in (
                                         line_1_x1, line_1_x2, line_1_y1, line_1_y2,
                                         np.abs(line_1_x1) - np.abs(line_1_x2),
                                         np.abs(line_1_y1) - np.abs(line_1_y2)):
-                                    if line_1_slope < -1 and line_1_x1 < 320 and line_1_x2 < 320:
+                                    if np.abs(line_1_slope) > 1 and line_1_x1 < 320 and line_1_x2 < 320:
                                         extrapolated_lines.append(line_1_x1)
                                         line_1_intercept = line_1_y1 - line_1_slope * line_1_x1
                                         line_1_startx = int((starty - line_1_intercept) / line_1_slope)
@@ -61,15 +60,13 @@ def hough_lines(warped, original):
                                         line_2_x1, line_2_x2, line_2_y1, line_2_y2,
                                         np.abs(line_2_x1) - np.abs(line_2_x2),
                                         np.abs(line_2_y1) - np.abs(line_2_y2)):
-                                    if line_2_slope > 1 and line_2_x1 > 320 and line_2_x2 > 320:
+                                    if np.abs(line_2_slope) > 1 and line_2_x1 > 320 and line_2_x2 > 320:
                                         extrapolated_lines.append(line_2_x1)
                                         line_2_intercept = line_2_y1 - line_2_slope * line_2_x1
                                         line_2_startx = int((starty - line_2_intercept) / line_2_slope)
                                         line_2_endx = int((endy - line_2_intercept) / line_2_slope)
                                         previous_lines[1] = [line_2_startx, starty, line_2_endx, endy]
 
-        # print("# of lines:", length, "found:", len(extrapolated_lines),
-        #      datetime.datetime.now().time().microsecond - start_time)
         cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Test2", 450, 500)
         cv2.moveWindow("Test2", -500, 300)
