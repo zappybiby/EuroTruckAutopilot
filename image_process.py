@@ -7,7 +7,7 @@ import hough_lines
 def pre_process(warped, original):
     blur = cv2.GaussianBlur(warped, (15, 15), 0)
     gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
-    adaptive_thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 21, -3)
+    adaptive_thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, -2)
     merge = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
 
     # TODO: USE THIS COOL HISTOGRAM THING FOR STYLE POINTS?
