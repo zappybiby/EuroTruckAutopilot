@@ -1,25 +1,17 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+
 import hough_lines
 
 
 def pre_process(warped, original):
     blur = cv2.GaussianBlur(warped, (15, 15), 0)
     gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
-    adaptive_thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, -2)
-    merge = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+    adaptive_thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 23, -3)
+    merged_lines = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
 
-    # TODO: USE THIS COOL HISTOGRAM THING FOR STYLE POINTS?
-    # histogram = np.sum(merge[merge.shape[0]//2:,:], axis=0)
-    # plt.plot(histogram)
-    # plt.show()
-
-    # median = np.median(merge)
-    # lower = int(max(0, (1.0 - 0.33) * median))
-    # upper = int(min(255, (1.0 + 0.33) * median))
-    # canny = cv2.Canny(merge, lower, upper)
-    # merge = cv2.morphologyEx(canny, cv2.MORPH_CLOSE, np.ones((21, 21), np.uint8))
+    # TODO: Filter out the HSV values that contain guardrails and other artifacts
+    # remove_guardrails = cv2.inRange(hsv, np.array([10,100,75]), np.array([35,255,255]))'
 
     cv2.namedWindow("adaptiveThreshold", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("adaptiveThreshold", 450, 500)
@@ -27,16 +19,10 @@ def pre_process(warped, original):
     cv2.imshow("adaptiveThreshold", adaptive_thresh)
     cv2.waitKey(1)
 
-    # cv2.namedWindow("canny", cv2.WINDOW_NORMAL)
-    # cv2.resizeWindow("canny", 450, 500)
-    # cv2.moveWindow("canny", -540, 300)
-    # cv2.imshow("canny", canny)
-    # cv2.waitKey(1)
-
-    cv2.namedWindow("merge", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("merge", 450, 500)
-    cv2.moveWindow("merge", -940, 300)
-    cv2.imshow("merge", merge)
+    cv2.namedWindow("merged_lines", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("merged_lines", 450, 500)
+    cv2.moveWindow("merged_lines", -940, 300)
+    cv2.imshow("merged_lines", merged_lines)
     cv2.waitKey(1)
 
-    hough_lines.hough_lines(merge, original)
+    hough_lines.hough_lines(merged_lines, original)

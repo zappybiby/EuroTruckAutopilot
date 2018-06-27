@@ -29,30 +29,30 @@ def perspective_transform(capture):
     original_size = (width_original, height_original)
 
     # Cut my life into pieces. This is my last resort.
-    if keyboard.is_pressed('t'):
-        a += 100
-        print("a:", a)
-    if keyboard.is_pressed('y'):
-        b += 100
-        print("b:", b)
-    if keyboard.is_pressed('u'):
-        c += 10
-        print("c:", c)
-    if keyboard.is_pressed('i'):
-        d += 10
-        print("d:", d)
-    if keyboard.is_pressed('g'):
-        a -= 100
-        print("a", a)
-    if keyboard.is_pressed('h'):
-        b -= 100
-        print("b:", b)
-    if keyboard.is_pressed('j'):
-        c -= 10
-        print("c:", c)
-    if keyboard.is_pressed('k'):
-        d -= 10
-        print("d:", d)
+    # if keyboard.is_pressed('t'):
+    #     a += 100
+    #     print("a:", a)
+    # if keyboard.is_pressed('y'):
+    #     b += 100
+    #     print("b:", b)
+    # if keyboard.is_pressed('u'):
+    #     c += 10
+    #     print("c:", c)
+    # if keyboard.is_pressed('i'):
+    #     d += 10
+    #     print("d:", d)
+    # if keyboard.is_pressed('g'):
+    #     a -= 100
+    #     print("a", a)
+    # if keyboard.is_pressed('h'):
+    #     b -= 100
+    #     print("b:", b)
+    # if keyboard.is_pressed('j'):
+    #     c -= 10
+    #     print("c:", c)
+    # if keyboard.is_pressed('k'):
+    #     d -= 10
+    #     print("d:", d)
 
     src = np.float32(
         [[(-a), height - b],

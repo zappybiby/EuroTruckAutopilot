@@ -68,19 +68,23 @@ def hough_lines(warped, original):
                                         line_2_endx = int((endy - line_2_intercept) / line_2_slope)
                                         previous_lines[1] = [line_2_startx, starty, line_2_endx, endy]
 
-        width = 640
-        height = 400
-        truck_pos = int(width/2)
-        center_of_lane = int((previous_lines[0][0] + previous_lines[1][0])/2)
+        window_width = 640
+        window_height = 360
+        game_width = 512
+        truck_pos = int(window_width / 2)
+        center_of_lane = int((previous_lines[0][0] + previous_lines[1][0]) / 2)
         pyautogui.PAUSE = 0
-        pyautogui.moveTo(1024/2, None)
-        difference = (truck_pos - center_of_lane)/5
+        pyautogui.moveTo(game_width, None)
+        difference = (truck_pos - center_of_lane) / 5
         print(truck_pos, center_of_lane, difference)
         print("pos:", pyautogui.position())
-        pyautogui.moveRel(1024/2 - difference, None)
+        pyautogui.moveRel(game_width - difference, None)
 
-    cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Test2", 450, 500)
-    cv2.moveWindow("Test2", -500, 300)
-    cv2.imshow("Test2", original)
-    cv2.waitKey(1)
+        cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("Test2", 450, 500)
+        cv2.moveWindow("Test2", -500, 300)
+        cv2.putText(original, "Distance From Center Line: " + str(difference),
+                    (int(window_width / 3), int(window_height / 3)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.imshow("Test2", original)
+        cv2.waitKey(1)
