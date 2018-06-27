@@ -2,5 +2,10 @@ EuroTruckAutopilot is a program written in Python that aims to autonomously driv
 
 Currently, the program will only run on Windows. 
 
-Example video:
-https://www.youtube.com/watch?v=_s00JKtwZUc
+### Latest Video: Previous lines are now stored and mouse movement has been implemented
+
+- https://www.youtube.com/watch?v=WxbL_NPUOnk
+
+### Older Videos: 
+1. Lane Detection proof-of-concept
+    - https://www.youtube.com/watch?v=_s00JKtwZUc
