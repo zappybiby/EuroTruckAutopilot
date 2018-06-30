@@ -12,5 +12,10 @@ def get():
     return monitors
 
 
+def get_window_x_position(offset):
+    monitors = get()
+    return int(get_x_offset(monitors[1])) + offset if len(monitors) > 1 else offset
+
+
 def get_x_offset(monitor):
     return monitor[monitor.find('+') + 1:monitor.rfind('+')]

@@ -5,19 +5,12 @@ import numpy as np
 import monitors
 import image_process
 
-_monitors = monitors.get()
+window_x_position = monitors.get_window_x_position(0)
 
 a = 20
 b = 40
 c = 60
 d = -70
-
-
-def get_window_x_position():
-    if len(_monitors) > 1:
-        return int(monitors.get_x_offset(_monitors[1])) + 100
-    else:
-        return 100
 
 
 def transform(window):
@@ -83,7 +76,7 @@ def transform(window):
 
     cv2.namedWindow("original_warped", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("original_warped", 450, 500)
-    cv2.moveWindow("original_warped", get_window_x_position(), 300)
+    cv2.moveWindow("original_warped", window_x_position, 0)
     cv2.imshow("original_warped", original_warped)
     cv2.waitKey(1)
 

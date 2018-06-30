@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 
 import hough_lines
+import monitors
+
+window_x_position = [monitors.get_window_x_position(900), monitors.get_window_x_position(1350)]
 
 
 def pre_process(warped, original):
@@ -18,7 +21,7 @@ def pre_process(warped, original):
 
     cv2.namedWindow("adaptiveThreshold", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("adaptiveThreshold", 450, 500)
-    cv2.moveWindow("adaptiveThreshold", -1380, 300)
+    cv2.moveWindow("adaptiveThreshold", window_x_position[0], 0)
     cv2.imshow("adaptiveThreshold", adaptive_thresh)
     cv2.waitKey(1)
 
@@ -30,7 +33,7 @@ def pre_process(warped, original):
 
     cv2.namedWindow("merge", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("merge", 450, 500)
-    cv2.moveWindow("merge", -940, 300)
+    cv2.moveWindow("merge", window_x_position[1], 0)
     cv2.imshow("merge", merge)
     cv2.waitKey(1)
 

@@ -3,6 +3,10 @@ import datetime
 import cv2
 import numpy as np
 
+import monitors
+
+window_x_position = monitors.get_window_x_position(450)
+
 starty = 1
 endy = 1000
 
@@ -57,6 +61,6 @@ def hough_lines(warped, original):
               datetime.datetime.now().time().microsecond - start_time)
         cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Test2", 450, 500)
-        cv2.moveWindow("Test2", -500, 300)
+        cv2.moveWindow("Test2", window_x_position, 0)
         cv2.imshow("Test2", original)
         cv2.waitKey(1)
