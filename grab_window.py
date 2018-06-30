@@ -27,4 +27,4 @@ def grab_window():
             foreground_window_name = win32gui.GetWindowText(win32gui.GetForegroundWindow())
             if foreground_window_name == "Euro Truck Simulator 2":
                 game_capture = numpy.array(mss().grab(game_window))
-                perspective_transform.perspective_transform(game_capture)
+                perspective_transform.transform(game_capture)
