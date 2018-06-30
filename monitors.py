@@ -12,5 +12,5 @@ def get():
     return monitors
 
 
-def get_x_offset(monitor_position):
-    return re.sub(r'([\+]).*?([\+])', '', monitor_position).replace('+', '')
+def get_x_offset(monitor):
+    return monitor[monitor.find('+') + 1:monitor.rfind('+')]
