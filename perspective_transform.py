@@ -5,7 +5,7 @@ import numpy as np
 import monitors
 import image_process
 
-monitors = monitors.get()
+_monitors = monitors.get()
 
 a = 20
 b = 40
@@ -14,8 +14,8 @@ d = -70
 
 
 def get_window_x_position():
-    if len(monitors) > 1:
-        return int(monitors.get_x_offset(monitors[1])) + 100
+    if len(_monitors) > 1:
+        return int(monitors.get_x_offset(_monitors[1])) + 100
     else:
         return 100
 
