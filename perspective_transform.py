@@ -2,7 +2,10 @@ import cv2
 import keyboard
 import numpy as np
 
+import monitors
 import image_process
+
+window_x_position = monitors.get_window_x_position(0)
 
 a = 20
 b = 40
@@ -10,7 +13,7 @@ c = 60
 d = -70
 
 
-def perspective_transform(window):
+def transform(window):
     global a, b, c, d
 
     window_resized = cv2.resize(window, (640, 360))
@@ -73,7 +76,7 @@ def perspective_transform(window):
 
     cv2.namedWindow("original_warped", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("original_warped", 450, 500)
-    cv2.moveWindow("original_warped", -1820, 300)
+    cv2.moveWindow("original_warped", window_x_position, 0)
     cv2.imshow("original_warped", original_warped)
     cv2.waitKey(1)
 
