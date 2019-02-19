@@ -4,55 +4,58 @@ import numpy as np
 
 import image_process
 
-a = 220
+a = 20
 b = 40
-c = 70
-d = -70
+c = 390
+d = -130
 
 
 def perspective_transform(capture):
     global a, b, c, d
 
-    window_resized = cv2.resize(capture, (640, 360))
+    # remove
+    window_resized = cv2.resize(capture, (800, 600))
     original_resized = window_resized.copy()
-
     # Remove upper half of image
+    #crop_img = img[y:y+h, x:x+w]
+
     processed_cropped = window_resized[int(window_resized.shape[0] / 2):int(window_resized.shape[0])]
-    cropped_original = original_resized[int(original_resized.shape[0] / 2):int(original_resized.shape[0])]
 
     width = processed_cropped.shape[1]
     height = processed_cropped.shape[0]
     window_size = (width, height)
 
+    cropped_original = original_resized[int(original_resized.shape[0] / 2):int(original_resized.shape[0] / 1.5), int(original_resized.shape[1] / 2.5):int(original_resized.shape[1] / 1.5)]
+
     width_original = cropped_original.shape[1]
     height_original = cropped_original.shape[0]
     original_size = (width_original, height_original)
 
-    # Cut my life into pieces. This is my last resort.
-    # if keyboard.is_pressed('t'):
-    #     a += 100
-    #     print("a:", a)
-    # if keyboard.is_pressed('y'):
-    #     b += 100
-    #     print("b:", b)
-    # if keyboard.is_pressed('u'):
-    #     c += 10
-    #     print("c:", c)
-    # if keyboard.is_pressed('i'):
-    #     d += 10
-    #     print("d:", d)
-    # if keyboard.is_pressed('g'):
-    #     a -= 100
-    #     print("a", a)
-    # if keyboard.is_pressed('h'):
-    #     b -= 100
-    #     print("b:", b)
-    # if keyboard.is_pressed('j'):
-    #     c -= 10
-    #     print("c:", c)
-    # if keyboard.is_pressed('k'):
-    #     d -= 10
-    #     print("d:", d)
+    #cut my life into pieces. This is my last resort.
+    if keyboard.is_pressed('t'):
+        a += 100
+        print("a:", a)
+    if keyboard.is_pressed('y'):
+        b += 100
+        print("b:", b)
+    if keyboard.is_pressed('u'):
+        c += 10
+        print("c:", c)
+    if keyboard.is_pressed('i'):
+        d += 10
+        print("d:", d)
+    if keyboard.is_pressed('g'):
+        a -= 100
+        print("a", a)
+    if keyboard.is_pressed('h'):
+        b -= 100
+        print("b:", b)
+    if keyboard.is_pressed('j'):
+        c -= 10
+        print("c:", c)
+    if keyboard.is_pressed('k'):
+        d -= 10
+        print("d:", d)
 
     src = np.float32(
         [[(-a), height - b],
@@ -77,4 +80,4 @@ def perspective_transform(capture):
     cv2.imshow("original_warped", original_warped)
     cv2.waitKey(1)
 
-    image_process.pre_process(warped, original_warped)
+    image_process.pre_process(capture, warped, original_warped)

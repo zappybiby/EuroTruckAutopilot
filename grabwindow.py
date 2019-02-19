@@ -25,6 +25,6 @@ def grab_window():
             height = bottom - top
             game_window = {'top': top, 'left': left, 'width': width, 'height': height}
             foreground_window_name = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-            if foreground_window_name == "Euro Truck Simulator 2":
+            if foreground_window_name == "Euro Truck Simulator 2" or "American Truck Simulator":
                 game_capture = numpy.array(mss().grab(game_window))
                 perspective_transform.perspective_transform(game_capture)

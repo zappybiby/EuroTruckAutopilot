@@ -78,7 +78,7 @@ def hough_lines(warped, original):
         center_of_lane = int((previous_lines[0][0] + previous_lines[1][0]) / 2)
 
         pyautogui.PAUSE = 0
-        pyautogui.moveTo(game_width / 2, None)
+        #pyautogui.moveTo(game_width / 2, None)
         difference = (truck_pos - center_of_lane)
 
         # max number of pixels that truck can turn before losing lane.
@@ -87,9 +87,9 @@ def hough_lines(warped, original):
         # Diff on a scale from -1 to 1
         #linearized_difference = difference / max_deviation
 
-        print(truck_pos, center_of_lane, difference)
-        print("pos:", pyautogui.position())
-        pyautogui.moveRel((game_width / 2) - difference, None)
+        #print(truck_pos, center_of_lane, difference)
+        #print("pos:", pyautogui.position())
+        #pyautogui.moveRel((game_width / 2) - difference, None)
 
         cv2.namedWindow("Test2", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Test2", 450, 500)
