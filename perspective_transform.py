@@ -4,10 +4,10 @@ import numpy as np
 
 import image_process
 
-a = 20
-b = 40
-c = 390
-d = -130
+a = 0
+b = -20
+c = 400
+d = -160
 
 
 def perspective_transform(capture):
@@ -19,43 +19,43 @@ def perspective_transform(capture):
     # Remove upper half of image
     #crop_img = img[y:y+h, x:x+w]
 
-    processed_cropped = window_resized[int(window_resized.shape[0] / 2):int(window_resized.shape[0])]
+    processed_cropped = window_resized[int(window_resized.shape[0] / 2.2):int(window_resized.shape[0])]
 
     width = processed_cropped.shape[1]
     height = processed_cropped.shape[0]
     window_size = (width, height)
 
-    cropped_original = original_resized[int(original_resized.shape[0] / 2):int(original_resized.shape[0] / 1.5), int(original_resized.shape[1] / 2.5):int(original_resized.shape[1] / 1.5)]
+    cropped_original = original_resized[int(original_resized.shape[0] / 2.2):int(original_resized.shape[0] / 1.55), int(original_resized.shape[1] / 3):int(original_resized.shape[1] / 1.5)]
 
     width_original = cropped_original.shape[1]
     height_original = cropped_original.shape[0]
     original_size = (width_original, height_original)
 
     #cut my life into pieces. This is my last resort.
-    if keyboard.is_pressed('t'):
-        a += 100
-        print("a:", a)
-    if keyboard.is_pressed('y'):
-        b += 100
-        print("b:", b)
-    if keyboard.is_pressed('u'):
-        c += 10
-        print("c:", c)
-    if keyboard.is_pressed('i'):
-        d += 10
-        print("d:", d)
-    if keyboard.is_pressed('g'):
-        a -= 100
-        print("a", a)
-    if keyboard.is_pressed('h'):
-        b -= 100
-        print("b:", b)
-    if keyboard.is_pressed('j'):
-        c -= 10
-        print("c:", c)
-    if keyboard.is_pressed('k'):
-        d -= 10
-        print("d:", d)
+    # if keyboard.is_pressed('t'):
+    #     a += 10
+    #     print("a:", a)
+    # if keyboard.is_pressed('y'):
+    #     b += 10
+    #     print("b:", b)
+    # if keyboard.is_pressed('u'):
+    #     c += 10
+    #     print("c:", c)
+    # if keyboard.is_pressed('i'):
+    #     d += 10
+    #     print("d:", d)
+    # if keyboard.is_pressed('g'):
+    #     a -= 10
+    #     print("a", a)
+    # if keyboard.is_pressed('h'):
+    #     b -= 10
+    #     print("b:", b)
+    # if keyboard.is_pressed('j'):
+    #     c -= 10
+    #     print("c:", c)
+    # if keyboard.is_pressed('k'):
+    #     d -= 10
+    #     print("d:", d)
 
     src = np.float32(
         [[(-a), height - b],
