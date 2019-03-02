@@ -1,83 +1,48 @@
 import cv2
-import keyboard
 import numpy as np
 
 import image_process
 
-a = 0
-b = -20
-c = 400
-d = -160
-
 
 def perspective_transform(capture):
-    global a, b, c, d
 
-    # remove
-    window_resized = cv2.resize(capture, (800, 600))
-    original_resized = window_resized.copy()
-    # Remove upper half of image
-    #crop_img = img[y:y+h, x:x+w]
+    capture_width = capture.shape[1]
+    capture_height = capture.shape[0]
 
-    processed_cropped = window_resized[int(window_resized.shape[0] / 2.2):int(window_resized.shape[0])]
+    # ROI values determined on 1920x1080 window and are then scaled for different resolutions
+    roi_top_left = (int(capture_width * (85 / 192)), int(capture_height * (103 / 216)))
+    roi_top_right = (int(capture_width * (55 / 96)), int(capture_height * ( 103/216)))
+    roi_bottom_left = (int(capture_width * (25 / 96)), int(capture_height * (13 / 18)))
+    roi_bottom_right = (int(capture_width * (35/48)), int(capture_height * (13 / 18)))
+    roi = np.float32([roi_top_left, roi_top_right, roi_bottom_right, roi_bottom_left])
 
-    width = processed_cropped.shape[1]
-    height = processed_cropped.shape[0]
-    window_size = (width, height)
+    # compute the width of the new image, which will be the
+    # maximum distance between bottom-right and bottom-left
+    # x-coordiates or the top-right and top-left x-coordinates
+    widthA = np.sqrt(((roi_bottom_right[0] - roi_bottom_left[0]) ** 2) + ((roi_bottom_right[1] - roi_bottom_left[1]) ** 2))
+    widthB = np.sqrt(((roi_top_right[0] - roi_top_left[0]) ** 2) + ((roi_top_right[1] - roi_top_left[1]) ** 2))
+    maxWidth = max(int(widthA), int(widthB))
 
-    cropped_original = original_resized[int(original_resized.shape[0] / 2.2):int(original_resized.shape[0] / 1.55), int(original_resized.shape[1] / 3):int(original_resized.shape[1] / 1.5)]
+    # compute the height of the new image, which will be the
+    # maximum distance between the top-right and bottom-right
+    # y-coordinates or the top-left and bottom-left y-coordinates
+    heightA = np.sqrt(((roi_top_right[0] - roi_bottom_right[0]) ** 2) + ((roi_top_right[1] - roi_bottom_right[1]) ** 2))
+    heightB = np.sqrt(((roi_top_left[0] - roi_bottom_left[0]) ** 2) + ((roi_top_left[1] - roi_bottom_left[1]) ** 2))
+    maxHeight = max(int(heightA), int(heightB))
 
-    width_original = cropped_original.shape[1]
-    height_original = cropped_original.shape[0]
-    original_size = (width_original, height_original)
+    # now that we have the dimensions of the new image, construct
+    # the set of destination points to obtain a "birds eye view",
+    # (i.e. top-down view) of the image, again specifying points
+    # in the top-left, top-right, bottom-right, and bottom-left
+    # order
+    dst = np.array([
+        [0, 0],
+        [maxWidth - 1, 0],
+        [maxWidth - 1, maxHeight - 1],
+        [0, maxHeight - 1]], dtype="float32")
 
-    #cut my life into pieces. This is my last resort.
-    # if keyboard.is_pressed('t'):
-    #     a += 10
-    #     print("a:", a)
-    # if keyboard.is_pressed('y'):
-    #     b += 10
-    #     print("b:", b)
-    # if keyboard.is_pressed('u'):
-    #     c += 10
-    #     print("c:", c)
-    # if keyboard.is_pressed('i'):
-    #     d += 10
-    #     print("d:", d)
-    # if keyboard.is_pressed('g'):
-    #     a -= 10
-    #     print("a", a)
-    # if keyboard.is_pressed('h'):
-    #     b -= 10
-    #     print("b:", b)
-    # if keyboard.is_pressed('j'):
-    #     c -= 10
-    #     print("c:", c)
-    # if keyboard.is_pressed('k'):
-    #     d -= 10
-    #     print("d:", d)
-
-    src = np.float32(
-        [[(-a), height - b],
-         [width + a, height - b],
-         [width / 2 + c, (height / 2) + d],
-         [width / 2 - c, (height / 2) + d]])
-
-    dst = np.float32(
-        [[0, height],
-         [width, height],
-         [width, 0],
-         [0, 0]])
-
-    m = cv2.getPerspectiveTransform(src, dst)
-
-    warped = cv2.warpPerspective(processed_cropped, m, window_size, flags=cv2.INTER_LINEAR)
-    original_warped = cv2.warpPerspective(cropped_original, m, original_size, flags=cv2.INTER_LINEAR)
-
-    cv2.namedWindow("original_warped", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("original_warped", 450, 500)
-    cv2.moveWindow("original_warped", -1820, 300)
-    cv2.imshow("original_warped", original_warped)
-    cv2.waitKey(1)
-
-    image_process.pre_process(capture, warped, original_warped)
+    # compute the perspective transform matrix and then apply it
+    M = cv2.getPerspectiveTransform(roi, dst)
+    warped = cv2.warpPerspective(capture, M, (maxWidth, maxHeight))
+    resized_warped = cv2.resize(warped, None, fx=0.5, fy=0.5)
+    image_process.pre_process(capture, resized_warped)
